@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Horizon — Multi-Generation Protection</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Light warm palette — family-friendly & premium */
+  --cream:  #FAFAF6;
+  --cream2: #F4F1EA;
+  --cream3: #EDE8DC;
+  --navy:   #0D1F3C;
+  --navy2:  #1A3357;
+  --slate:  #2E5080;
+  --text:   #1A2B42;
+  --text2:  #3D546A;
+  --text3:  #6B849A;
+  --white:  #FFFFFF;
+  /* Gold */
+  --gold:   #C8921A;
+  --gold2:  #E0A820;
+  --gold3:  #F5C842;
+  --gold-bg:rgba(200,146,26,0.08);
+  --gold-br:rgba(200,146,26,0.25);
+  /* Accent pops */
+  --teal:   #2A9D8F;
+  --teal-bg:rgba(42,157,143,0.10);
+  --coral:  #E76F51;
+  --coral-bg:rgba(231,111,81,0.10);
+  --sage:   #52A68A;
+  --sage-bg:rgba(82,166,138,0.10);
+  --violet: #7B6CF6;
+  --violet-bg:rgba(123,108,246,0.10);
+  --sky:    #3B9ECC;
+  --sky-bg: rgba(59,158,204,0.10);
+  --serif:  'Playfair Display',Georgia,serif;
+  --sans:   'Nunito',sans-serif;
+  --shadow: 0 2px 20px rgba(13,31,60,0.08);
+  --shadow-md: 0 6px 32px rgba(13,31,60,0.12);
+  --r:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--cream);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.hero-wrap *{color:inherit;}
+.hero-wrap{color:#FFFFFF;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;height:66px;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(250,250,246,0.95);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--cream3);box-shadow:0 1px 12px rgba(13,31,60,0.06);}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
+.brand-emblem{width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--navy),var(--slate));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:17px;font-weight:700;color:var(--gold3);}
+.brand-name{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--navy);line-height:1.1;}
+.brand-tagline{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-top:1px;}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-links a{font-size:13.5px;font-weight:600;color:var(--text2);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--navy);}
+.btn-nav{height:40px;padding:0 22px;
+  background:linear-gradient(135deg,var(--navy),var(--slate));
+  color:var(--white);font-family:var(--sans);font-size:13px;font-weight:700;
+  border:none;border-radius:50px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(13,31,60,0.25);transition:all .2s;white-space:nowrap;}
+.btn-nav:hover{opacity:0.88;transform:translateY(-1px);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:22px;height:2.5px;background:var(--navy);border-radius:2px;transition:all .3s;}
+.mobile-menu{display:none;position:fixed;inset:66px 0 0;z-index:190;
+  background:rgba(250,250,246,0.98);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  border-top:1px solid var(--cream3);}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:22px;font-weight:700;color:var(--navy);text-decoration:none;}
+.mobile-menu a:hover{color:var(--gold);}
+
+/* ── HERO ── */
+.hero-section{background:linear-gradient(160deg,#061020 0%,#0D1F3C 45%,#122845 100%);
+  position:relative;overflow:hidden;color:#FFFFFF;}
+.hero-section::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 70% at 90% 50%,rgba(200,146,26,0.10) 0%,transparent 65%),
+             radial-gradient(ellipse 50% 50% at 10% 80%,rgba(42,157,143,0.06) 0%,transparent 55%);
+  pointer-events:none;}
+.hero-wrap{max-width:1280px;margin:0 auto;padding:72px 28px 88px;
+  display:grid;grid-template-columns:1fr 360px;gap:60px;align-items:center;position:relative;z-index:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;
+  font-size:10.5px;font-weight:800;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--gold3);margin-bottom:20px;}
+.hero-tag::before{content:'';width:22px;height:2px;background:var(--gold3);}
+.hero h1{font-family:var(--serif);font-size:clamp(40px,5.2vw,68px);
+  font-weight:800;line-height:1.07;color:#FFFFFF !important;margin-bottom:20px;
+  -webkit-text-fill-color:#FFFFFF;}
+.hero h1 em{font-style:italic;color:#F5C842 !important;-webkit-text-fill-color:#F5C842;}
+.hero-sub{font-size:16px;color:#FFFFFF !important;-webkit-text-fill-color:#FFFFFF;opacity:0.9;line-height:1.8;max-width:460px;margin-bottom:34px;}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-gold{height:50px;padding:0 32px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:var(--navy);font-family:var(--sans);font-size:13.5px;font-weight:800;
+  border:none;border-radius:50px;cursor:pointer;
+  box-shadow:0 6px 22px rgba(200,146,26,0.4);transition:all .2s;letter-spacing:0.2px;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(200,146,26,0.5);}
+.btn-white{height:50px;padding:0 28px;background:rgba(255,255,255,0.12);color:var(--white);
+  font-family:var(--sans);font-size:13.5px;font-weight:600;
+  border:1.5px solid rgba(255,255,255,0.25);border-radius:50px;cursor:pointer;transition:all .2s;}
+.btn-white:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);}
+.hero-stats{display:flex;gap:28px;margin-top:44px;padding-top:32px;
+  border-top:1px solid rgba(255,255,255,0.12);flex-wrap:wrap;}
+.hstat-num{font-family:var(--serif);font-size:32px;font-weight:700;color:var(--gold3);line-height:1;}
+.hstat-lbl{font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px;}
+
+/* hero panel */
+.hero-panel{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);
+  border-radius:22px;padding:28px;backdrop-filter:blur(10px);}
+.hp-title{font-size:10px;font-weight:800;letter-spacing:2px;color:rgba(255,255,255,0.45);
+  text-transform:uppercase;margin-bottom:22px;}
+.hp-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,0.07);}
+.hp-step:last-child{border-bottom:none;}
+.step-num{width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:13px;font-weight:700;}
+.step-num.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy);}
+.step-num.glass{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:var(--gold3);}
+.step-lbl{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold3);margin-bottom:2px;}
+.step-title{font-size:13.5px;font-weight:700;color:var(--white);margin-bottom:2px;}
+.step-desc{font-size:11.5px;color:rgba(255,255,255,0.55);line-height:1.55;}
+
+/* ── PAGE ── */
+.page{background:var(--cream);}
+.section-wrap{max-width:1280px;margin:0 auto;padding:88px 28px;}
+.section-wrap.narrow{max-width:920px;}
+.section-wrap.center{text-align:center;}
+.divider-bg{background:var(--cream2);}
+.section-pill{display:inline-flex;align-items:center;gap:8px;
+  background:var(--gold-bg);border:1px solid var(--gold-br);
+  color:var(--gold);font-size:10.5px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;padding:6px 14px;border-radius:50px;margin-bottom:18px;}
+.section-title{font-family:var(--serif);font-size:clamp(30px,4.5vw,50px);
+  font-weight:700;line-height:1.1;color:var(--navy);margin-bottom:14px;}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-sub{font-size:15px;color:var(--text2);line-height:1.8;max-width:540px;}
+.card{background:var(--white);border:1px solid var(--cream3);border-radius:20px;padding:28px;
+  box-shadow:var(--shadow);transition:all .25s;}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+
+/* ── PILLARS ── */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;}
+.feat-card{background:var(--white);border:1.5px solid var(--cream3);border-radius:22px;padding:30px;
+  box-shadow:var(--shadow);transition:all .25s;position:relative;overflow:hidden;}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+.feat-card.c1::before{background:linear-gradient(90deg,var(--teal),#52C9BC);}
+.feat-card.c2::before{background:linear-gradient(90deg,var(--gold),var(--gold3));}
+.feat-card.c3::before{background:linear-gradient(90deg,var(--coral),#F4A261);}
+.feat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px);}
+.feat-icon-wrap{width:52px;height:52px;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px;}
+.feat-icon-wrap.teal{background:var(--teal-bg);}
+.feat-icon-wrap.gold{background:var(--gold-bg);}
+.feat-icon-wrap.coral{background:var(--coral-bg);}
+.feat-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.feat-desc{font-size:13.5px;color:var(--text2);line-height:1.75;}
+
+/* ── BENEFIT TABLE ── */
+.benefit-tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--cream2);
+  border-radius:50px;padding:4px;width:fit-content;}
+.btab{padding:9px 24px;border-radius:50px;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;color:var(--text2);border:none;background:transparent;}
+.btab.active{background:var(--navy);color:var(--white);box-shadow:0 3px 12px rgba(13,31,60,0.2);}
+.bpanel{display:none;}
+.bpanel.active{display:block;}
+.benefit-table{width:100%;border-collapse:collapse;background:var(--white);
+  border-radius:16px;overflow:hidden;box-shadow:var(--shadow);}
+.benefit-table th{font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--white);background:var(--navy);padding:14px 20px;text-align:left;}
+.benefit-table td{padding:16px 20px;font-size:14px;color:var(--text2);
+  border-bottom:1px solid var(--cream3);vertical-align:top;}
+.benefit-table tr:last-child td{border-bottom:none;}
+.benefit-table tr:hover td{background:var(--cream);}
+.col-year{color:var(--gold);font-weight:800;font-family:var(--serif);font-size:16px;}
+.col-event{color:var(--navy);font-weight:600;}
+.pill{display:inline-block;font-size:11px;font-weight:800;
+  padding:3px 11px;border-radius:20px;white-space:nowrap;margin-left:6px;}
+.pill.amber{background:var(--gold-bg);border:1px solid var(--gold-br);color:var(--gold);}
+.pill.green{background:var(--teal-bg);border:1px solid rgba(42,157,143,0.3);color:var(--teal);}
+.benefit-note{margin-top:18px;padding:16px 20px;
+  background:var(--gold-bg);border:1px solid var(--gold-br);
+  border-radius:14px;font-size:13px;color:var(--text2);line-height:1.65;}
+.annuity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;}
+.ann-card{background:var(--white);border:1.5px solid var(--cream3);
+  border-radius:20px;padding:26px;text-align:center;box-shadow:var(--shadow);transition:all .2s;}
+.ann-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.ann-icon{font-size:28px;margin-bottom:14px;}
+.ann-pct{font-family:var(--serif);font-size:38px;font-weight:700;color:var(--navy);line-height:1;}
+.ann-scenario{font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin:10px 0 12px;}
+.ann-desc{font-size:13px;color:var(--text2);line-height:1.65;}
+.ann-guarantee{margin-top:24px;padding:22px 26px;
+  background:linear-gradient(135deg,rgba(42,157,143,0.08),rgba(42,157,143,0.04));
+  border:1.5px solid rgba(42,157,143,0.25);
+  border-radius:18px;display:flex;align-items:flex-start;gap:16px;}
+.g-icon{font-size:28px;flex-shrink:0;}
+.g-title{font-weight:800;font-size:15px;color:var(--teal);margin-bottom:5px;}
+.g-desc{font-size:13.5px;color:var(--text2);line-height:1.65;}
+
+/* ── RIDERS ── */
+.rider-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px;margin-top:46px;}
+.rider{background:var(--white);border:1.5px solid var(--cream3);
+  border-radius:20px;padding:26px;box-shadow:var(--shadow);transition:all .25s;position:relative;overflow:hidden;}
+.rider::after{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 18px 0 60px;opacity:0.07;}
+.rider.r1::after{background:var(--teal);}
+.rider.r2::after{background:var(--coral);}
+.rider.r3::after{background:var(--gold2);}
+.rider.r4::after{background:var(--sky);}
+.rider.r5::after{background:var(--violet);}
+.rider:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.rider-badge{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.rider-badge.t{background:var(--teal-bg);color:var(--teal);}
+.rider-badge.c{background:var(--coral-bg);color:var(--coral);}
+.rider-badge.g{background:var(--gold-bg);color:var(--gold);}
+.rider-badge.s{background:var(--sky-bg);color:var(--sky);}
+.rider-badge.v{background:var(--violet-bg);color:var(--violet);}
+.rider-pct{font-family:var(--serif);font-size:36px;font-weight:700;color:var(--navy);line-height:1;margin-bottom:5px;}
+.rider-name{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.rider-hr{width:36px;height:2px;border-radius:2px;margin-bottom:12px;}
+.rider-hr.t{background:var(--teal);}
+.rider-hr.c{background:var(--coral);}
+.rider-hr.g{background:var(--gold);}
+.rider-hr.s{background:var(--sky);}
+.rider-hr.v{background:var(--violet);}
+.rider-desc{font-size:13px;color:var(--text2);line-height:1.65;}
+
+/* ── SPLIT POLICY ── */
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:50px;}
+.sinfo-item{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
+.sinfo-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px;}
+.sinfo-label{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+.sinfo-val{font-size:15px;color:var(--text);font-weight:500;}
+.split-visual{background:var(--navy);border-radius:24px;padding:32px;text-align:center;
+  box-shadow:var(--shadow-md);}
+.split-visual-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--white);margin-bottom:8px;}
+.split-visual-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:20px;}
+.split-arrow{font-size:28px;color:var(--gold3);margin:14px 0;}
+.split-badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.split-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  color:var(--white);font-size:13px;font-weight:700;padding:10px 20px;border-radius:50px;}
+
+/* ── CALCULATOR ── */
+.calc-outer{background:var(--navy);border-radius:28px;padding:44px;
+  max-width:820px;margin:50px auto 0;box-shadow:var(--shadow-md);}
+.calc-label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:14px;}
+.sa-cards{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap;}
+.sa-card{flex:1;min-width:100px;padding:14px 16px;
+  background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.12);
+  border-radius:14px;cursor:pointer;text-align:center;transition:all .2s;}
+.sa-card:hover{border-color:rgba(200,146,26,0.5);}
+.sa-card.sel{border-color:var(--gold2);background:rgba(200,146,26,0.12);}
+.sa-amt{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--white);}
+.sa-lbl{font-size:10px;color:rgba(255,255,255,0.45);margin-top:3px;line-height:1.35;}
+.sa-card.sel .sa-amt{color:var(--gold3);}
+
+/* Dual age sliders */
+.age-sliders{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;}
+.age-block{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;padding:20px 22px;}
+.age-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.age-who{display:flex;align-items:center;gap:8px;}
+.age-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.age-avatar.p{background:rgba(200,146,26,0.2);}
+.age-avatar.s{background:rgba(42,157,143,0.2);}
+.age-who-lbl{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;}
+.age-who-lbl.p{color:var(--gold3);}
+.age-who-lbl.s{color:#52C9BC;}
+.age-val{font-family:var(--serif);font-size:22px;font-weight:700;}
+.age-val.p{color:var(--gold3);}
+.age-val.s{color:#52C9BC;}
+input[type=range]{width:100%;cursor:pointer;height:4px;border-radius:4px;
+  background:rgba(255,255,255,0.12);-webkit-appearance:none;appearance:none;outline:none;}
+input[type=range].p{accent-color:var(--gold3);}
+input[type=range].s{accent-color:#52C9BC;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;cursor:pointer;}
+input.p::-webkit-slider-thumb{background:var(--gold3);box-shadow:0 0 8px rgba(245,200,66,0.6);}
+input.s::-webkit-slider-thumb{background:#52C9BC;box-shadow:0 0 8px rgba(82,201,188,0.6);}
+.age-range-lbl{display:flex;justify-content:space-between;margin-top:5px;}
+.age-range-lbl span{font-size:10.5px;color:rgba(255,255,255,0.35);}
+
+.calc-result{background:linear-gradient(135deg,rgba(200,146,26,0.15),rgba(200,146,26,0.05));
+  border:1.5px solid rgba(200,146,26,0.35);border-radius:20px;padding:26px 30px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.cr-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:5px;}
+.cr-value{font-family:var(--serif);font-size:40px;font-weight:700;color:var(--gold3);line-height:1;}
+.cr-note{font-size:11.5px;color:rgba(255,255,255,0.4);margin-top:4px;}
+.cr-details{display:flex;gap:24px;flex-wrap:wrap;}
+.cr-dval{font-size:15px;font-weight:700;color:rgba(255,255,255,0.75);margin-top:3px;}
+.medical-note{margin-top:16px;padding:13px 18px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;font-size:12.5px;color:rgba(255,255,255,0.5);display:flex;gap:10px;}
+
+/* ── FAQ ── */
+.faq-list{margin-top:48px;display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:var(--white);border:1.5px solid var(--cream3);border-radius:18px;
+  overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s;}
+.faq-item:hover{box-shadow:var(--shadow-md);}
+.faq-item.open{border-color:rgba(200,146,26,0.3);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;cursor:pointer;gap:16px;user-select:none;}
+.faq-q-text{font-size:15px;font-weight:700;color:var(--navy);line-height:1.4;}
+.faq-icon{width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:var(--cream2);display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:var(--gold);transition:all .25s;line-height:1;}
+.faq-item.open .faq-icon{background:var(--gold);color:var(--white);transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease, padding .25s;}
+.faq-a-inner{padding:0 24px 20px;font-size:14px;color:var(--text2);line-height:1.75;}
+.faq-item.open .faq-a{max-height:400px;}
+.faq-cat{display:inline-flex;align-items:center;gap:6px;margin-bottom:20px;}
+.faq-cat-dot{width:8px;height:8px;border-radius:50%;}
+
+/* ── CTA ── */
+.cta-section{background:linear-gradient(150deg,var(--navy),var(--navy2) 60%,#1E4070);
+  padding:88px 28px;text-align:center;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 70% at 80% 40%,rgba(200,146,26,0.1) 0%,transparent 60%);
+  pointer-events:none;}
+.cta-inner{max-width:680px;margin:0 auto;position:relative;z-index:1;}
+.cta-pill{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(200,146,26,0.15);border:1px solid rgba(200,146,26,0.3);
+  color:var(--gold3);font-size:10.5px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;padding:6px 16px;border-radius:50px;margin-bottom:20px;}
+.cta-inner h2{font-family:var(--serif);font-size:clamp(30px,4vw,48px);
+  font-weight:700;color:var(--white);margin-bottom:14px;line-height:1.1;}
+.cta-inner h2 em{font-style:italic;color:var(--gold3);}
+.cta-inner p{font-size:15px;color:rgba(255,255,255,0.65);line-height:1.75;margin-bottom:32px;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;}
+.btn-outline-white{height:50px;padding:0 28px;background:transparent;color:var(--white);
+  font-family:var(--sans);font-size:13.5px;font-weight:600;
+  border:1.5px solid rgba(255,255,255,0.3);border-radius:50px;cursor:pointer;transition:all .2s;}
+.btn-outline-white:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.5);}
+.contact-card{display:inline-flex;align-items:center;gap:14px;
+  padding:16px 28px;border-radius:16px;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  transition:background .2s;cursor:pointer;}
+.contact-card:hover{background:rgba(255,255,255,0.12);}
+.contact-icon{font-size:22px;}
+.contact-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:2px;}
+.contact-num{font-size:18px;font-weight:700;color:var(--gold3);font-family:var(--serif);}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:28px 28px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  border-top:1px solid rgba(255,255,255,0.06);}
+.f-copy{font-size:12.5px;color:rgba(255,255,255,0.35);}
+.f-right{display:flex;gap:24px;}
+.f-right a{font-size:12.5px;color:rgba(255,255,255,0.45);text-decoration:none;transition:color .2s;}
+.f-right a:hover{color:var(--gold3);}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  nav{padding:0 18px;}
+  .nav-links,.btn-nav{display:none;}
+  .hamburger{display:flex;}
+  /* hero */
+  .hero-wrap{grid-template-columns:1fr;gap:0;padding:52px 20px 72px;}
+  .hero-panel{display:none;}
+  .hero h1{font-size:clamp(36px,9.5vw,52px);}
+  /* sections */
+  .section-wrap{padding:64px 20px;}
+  .feat-grid{grid-template-columns:1fr;}
+  .annuity-grid{grid-template-columns:1fr;}
+  .split-grid{grid-template-columns:1fr;gap:28px;}
+  .age-sliders{grid-template-columns:1fr;}
+  .sa-cards{flex-direction:column;}
+  .sa-card{min-width:unset;}
+  .calc-outer{padding:28px 20px;}
+  .calc-result{flex-direction:column;align-items:flex-start;}
+  .cr-details{gap:16px;}
+  .cta-section{padding:64px 20px;}
+  .cta-btns{flex-direction:column;align-items:stretch;}
+  .btn-gold,.btn-outline-white{width:100%;height:52px;}
+  footer{flex-direction:column;align-items:flex-start;padding:24px 20px;}
+  .f-right{display:none;}
+  .rider-grid{grid-template-columns:1fr;}
+  .benefit-tabs{width:100%;}
+  .btab{flex:1;text-align:center;font-size:12px;}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .benefit-table th,.benefit-table td{white-space:nowrap;padding:12px 14px;}
+}
+@media(min-width:769px) and (max-width:1024px){
+  .hero-wrap{grid-template-columns:1fr;gap:0;}
+  .hero-panel{display:none;}
+  .feat-grid{grid-template-columns:repeat(2,1fr);}
+  .annuity-grid{grid-template-columns:repeat(2,1fr);}
+  .split-grid{grid-template-columns:1fr;}
+  nav{padding:0 28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="brand" href="#">
+    <div class="brand-emblem">H</div>
+    <div>
+      <div class="brand-name">Horizon</div>
+      <div class="brand-tagline">Multi-Generation Protection</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="#product">Product</a>
+    <a href="#benefits">Benefits</a>
+    <a href="#premium">Premium Est.</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="btn-nav" onclick="sTo('#contact')">Free Consultation →</button>
+  <div class="hamburger" onclick="toggleMenu()" id="ham">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#product" onclick="closeMenu()">Product</a>
+  <a href="#benefits" onclick="closeMenu()">Benefits</a>
+  <a href="#premium" onclick="closeMenu()">Premium Est.</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <button class="btn-gold" style="font-size:15px;height:52px;padding:0 36px;" onclick="closeMenu();sTo('#contact')">Free Consultation →</button>
+</div>
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-wrap">
+    <div>
+      <div class="hero-tag">Premium Life Protection · Multi-Generation</div>
+      <h1>Protect Two Lives,<br>Build a <em>Legacy</em><br>Across Generations</h1>
+      <p class="hero-sub">One policy for two people you love — spouses, or parent and child — with life protection and lifetime retirement income, all in one plan.</p>
+      <div class="hero-actions">
+        <button class="btn-gold" onclick="sTo('#contact')">Start Your Protection →</button>
+        <button class="btn-white" onclick="sTo('#premium')">Estimate Premium</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hstat-num">Rp 1.5B</div><div class="hstat-lbl">Maximum Sum Assured</div></div>
+        <div><div class="hstat-num">20 yrs</div><div class="hstat-lbl">Retirement Annuity Period</div></div>
+        <div><div class="hstat-num">15</div><div class="hstat-lbl">Critical Illnesses Covered</div></div>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="hp-title">How Horizon Works</div>
+      <div class="hp-step">
+        <div class="step-num gold">01</div>
+        <div><div class="step-lbl">Enrol</div><div class="step-title">Join at Ages 25–40</div><div class="step-desc">Two insured lives under one joint policy. Protection starts immediately.</div></div>
+      </div>
+      <div class="hp-step">
+        <div class="step-num glass">02</div>
+        <div><div class="step-lbl">Accumulation</div><div class="step-title">Pay Premiums, Build Your Fund</div><div class="step-desc">Monthly premiums grow your corpus while life cover stays fully active.</div></div>
+      </div>
+      <div class="hp-step">
+        <div class="step-num gold">03</div>
+        <div><div class="step-lbl">Age 60</div><div class="step-title">Receive 20-Year Annuity</div><div class="step-desc">Steady retirement income paid automatically every year for 20 years.</div></div>
+      </div>
+      <div class="hp-step">
+        <div class="step-num glass">04</div>
+        <div><div class="step-lbl">Legacy</div><div class="step-title">Heirs Are Protected Too</div><div class="step-desc">10-year guarantee keeps payments flowing to your heirs if needed.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+
+<!-- WHY HORIZON -->
+<div id="product">
+<div class="section-wrap">
+  <div class="reveal">
+    <div class="section-pill">✦ Why Horizon?</div>
+    <h2 class="section-title">Three Pillars of <em>Strength</em></h2>
+    <p class="section-sub">Built for couples and parent-child relationships alike. One policy, two lives protected, and a legacy for the next generation.</p>
+  </div>
+  <div class="feat-grid reveal">
+    <div class="feat-card c1">
+      <div class="feat-icon-wrap teal">🛡️</div>
+      <div class="feat-title">Dual-Life Protection</div>
+      <p class="feat-desc">A single policy covers two people at once. If either or both pass away before retirement, the benefit is paid immediately to the survivor or heirs.</p>
+    </div>
+    <div class="feat-card c2">
+      <div class="feat-icon-wrap gold">💰</div>
+      <div class="feat-title">Lifetime Retirement Income</div>
+      <p class="feat-desc">From age 60, you receive annuity payments for 20 full years — whether together or as a surviving partner after your loved one has passed.</p>
+    </div>
+    <div class="feat-card c3">
+      <div class="feat-icon-wrap coral">🌿</div>
+      <div class="feat-title">Generational Legacy</div>
+      <p class="feat-desc">A 10-year guarantee ensures payments continue to your children or heirs — even if both policyholders pass before Year 10 of retirement.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- BENEFITS -->
+<div class="divider-bg" id="benefits">
+<div class="section-wrap">
+  <div class="reveal">
+    <div class="section-pill">📋 Benefit Details</div>
+    <h2 class="section-title">What You <em>Receive</em></h2>
+  </div>
+  <div class="reveal" style="margin-top:32px;">
+    <div class="benefit-tabs">
+      <button class="btab active" onclick="sTab('acc',this)">📈 Before Retirement</button>
+      <button class="btab" onclick="sTab('dist',this)">💸 At Retirement (Age 60+)</button>
+    </div>
+    <div id="b-acc" class="bpanel active">
+      <div class="table-scroll">
+        <table class="benefit-table">
+          <thead><tr>
+            <th style="min-width:110px;">Policy Year</th>
+            <th style="min-width:200px;">Situation</th>
+            <th style="min-width:260px;">Benefit Paid</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="col-year">Yr 1–10</td>
+              <td class="col-event">Either or both insured pass away</td>
+              <td>All premiums returned + 4.5% annual interest <span class="pill amber">Return of Premium</span></td>
+            </tr>
+            <tr>
+              <td class="col-year">Yr 11–15</td>
+              <td class="col-event">Either or both insured pass away</td>
+              <td>50% of Sum Assured paid immediately</td>
+            </tr>
+            <tr>
+              <td class="col-year">Yr 16+</td>
+              <td class="col-event">Either or both insured pass away</td>
+              <td>100% of Sum Assured paid immediately <span class="pill green">Full SA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="benefit-note">ℹ️ <strong>Sum Assured (SA)</strong> options: <strong>Rp 800M</strong>, <strong>Rp 1 Billion</strong>, or <strong>Rp 1.5 Billion</strong>. The earlier you enrol, the lower your monthly premium.</div>
+    </div>
+    <div id="b-dist" class="bpanel">
+      <p style="color:var(--text2);margin-bottom:24px;font-size:14.5px;">Annuity is paid automatically for 20 full years, split based on both insured's status.</p>
+      <div class="annuity-grid">
+        <div class="ann-card">
+          <div class="ann-icon">👫</div>
+          <div class="ann-pct">100%</div>
+          <div class="ann-scenario">Both Alive</div>
+          <div class="ann-desc">Full 100% annuity received together each year. Enjoy retirement side by side with complete peace of mind.</div>
+        </div>
+        <div class="ann-card">
+          <div class="ann-icon">🕊️</div>
+          <div class="ann-pct">50% + 50%</div>
+          <div class="ann-scenario">One Passes First</div>
+          <div class="ann-desc">50% lump sum SA paid immediately. 50% annuity continues flowing annually for the surviving partner.</div>
+        </div>
+        <div class="ann-card">
+          <div class="ann-icon">👨‍👩‍👧</div>
+          <div class="ann-pct">50%</div>
+          <div class="ann-scenario">Both Have Passed</div>
+          <div class="ann-desc">50% annuity continues to heirs until the guaranteed period ends. A structured, lasting legacy.</div>
+        </div>
+      </div>
+      <div class="ann-guarantee">
+        <div class="g-icon">🔐</div>
+        <div>
+          <div class="g-title">10-Year Guarantee Period</div>
+          <div class="g-desc">If both insured pass before Year 10 of retirement, heirs continue receiving 50% annuity payments until the guarantee period is complete. Protection that never stops.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- RIDERS -->
+<div class="section-wrap">
+  <div class="reveal">
+    <div class="section-pill">⚡ Optional Add-Ons</div>
+    <h2 class="section-title">Strengthen Your <em>Coverage</em></h2>
+    <p class="section-sub">Add riders tailored to your family — from critical illness to automatic premium waiver.</p>
+  </div>
+  <div class="rider-grid reveal">
+    <div class="rider r1">
+      <div class="rider-badge t">TPD Rider</div>
+      <div class="rider-pct">60%</div>
+      <div class="rider-name">Total Permanent Disability</div>
+      <div class="rider-hr t"></div>
+      <div class="rider-desc">60% of Sum Assured paid upon diagnosis of Total Permanent Disability that prevents any form of gainful work.</div>
+    </div>
+    <div class="rider r2">
+      <div class="rider-badge c">Critical Illness</div>
+      <div class="rider-pct">40%</div>
+      <div class="rider-name">15 Critical Illnesses</div>
+      <div class="rider-hr c"></div>
+      <div class="rider-desc">Covers Stage III–IV Cancer, Heart Attack, Stroke, Kidney Failure, Alzheimer's, Parkinson's, Blindness, Deafness, and 7 more serious conditions.</div>
+    </div>
+    <div class="rider r3">
+      <div class="rider-badge g">COLA Rider</div>
+      <div class="rider-pct">+3.5%</div>
+      <div class="rider-name">Cost of Living Adjustment</div>
+      <div class="rider-hr g"></div>
+      <div class="rider-desc">Benefits rise 3.5% compounded each year, preserving your coverage's real value against long-term inflation.</div>
+    </div>
+    <div class="rider r4">
+      <div class="rider-badge s">Accident Rider</div>
+      <div class="rider-pct">+25%</div>
+      <div class="rider-name">Accidental Death & Disability</div>
+      <div class="rider-hr s"></div>
+      <div class="rider-desc">An additional 25% of Sum Assured paid if death or total disability is directly caused by an accident.</div>
+    </div>
+    <div class="rider r5">
+      <div class="rider-badge v">Premium Waiver</div>
+      <div class="rider-pct">100%</div>
+      <div class="rider-name">Automatic Premium Waiver</div>
+      <div class="rider-hr v"></div>
+      <div class="rider-desc">All future premiums waived 100% if both insured simultaneously suffer Total Permanent Disability. Your policy stays fully active.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SPLIT POLICY -->
+<div class="divider-bg">
+<div class="section-wrap">
+  <div class="reveal">
+    <div class="section-pill">🔄 Flexibility</div>
+    <h2 class="section-title">Policy <em>Split Feature</em></h2>
+    <p class="section-sub">Life changes — and Horizon adapts. The joint policy can be split into two independent policies with no new medical exam required.</p>
+  </div>
+  <div class="split-grid reveal">
+    <div>
+      <div class="sinfo-item"><div class="sinfo-dot"></div><div><div class="sinfo-label">Trigger Events</div><div class="sinfo-val">Divorce, Change of Guardian, or Adoption</div></div></div>
+      <div class="sinfo-item"><div class="sinfo-dot"></div><div><div class="sinfo-label">Time Limit</div><div class="sinfo-val">Within 12 months of the event</div></div></div>
+      <div class="sinfo-item"><div class="sinfo-dot"></div><div><div class="sinfo-label">Admin Fee</div><div class="sinfo-val">Only Rp 500,000</div></div></div>
+      <div class="sinfo-item"><div class="sinfo-dot"></div><div><div class="sinfo-label">No New Medical Exam</div><div class="sinfo-val">No additional health screening required</div></div></div>
+    </div>
+    <div class="split-visual">
+      <div class="split-visual-title">Joint Policy</div>
+      <div class="split-visual-desc">One policy · Two insured lives · Full shared benefits</div>
+      <div class="split-arrow">⬇</div>
+      <div class="split-badges">
+        <div class="split-badge">Independent Policy A</div>
+        <div class="split-badge">Independent Policy B</div>
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:14px;">Premiums recalculated. Each policy stands on its own.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PREMIUM CALCULATOR -->
+<div id="premium">
+<div class="section-wrap narrow center">
+  <div class="reveal">
+    <div class="section-pill" style="margin:0 auto 18px;">🧮 Simple & Transparent</div>
+    <h2 class="section-title">Estimate Your <em>Monthly Premium</em></h2>
+    <p class="section-sub" style="margin:0 auto;">Check indicative premiums for both insured lives based on each person's entry age and your chosen sum assured.</p>
+  </div>
+  <div class="calc-outer reveal">
+    <div class="calc-label">Choose Sum Assured</div>
+    <div class="sa-cards">
+      <div class="sa-card sel" onclick="selSA(this,800)">
+        <div class="sa-amt">Rp 800M</div>
+        <div class="sa-lbl">No Medical Exam Required</div>
+      </div>
+      <div class="sa-card" onclick="selSA(this,1000)">
+        <div class="sa-amt">Rp 1 Billion</div>
+        <div class="sa-lbl">Full Medical Required</div>
+      </div>
+      <div class="sa-card" onclick="selSA(this,1500)">
+        <div class="sa-amt">Rp 1.5 Billion</div>
+        <div class="sa-lbl">Full Medical Required</div>
+      </div>
+    </div>
+
+    <div class="calc-label" style="margin-bottom:14px;">Entry Age — Both Insured Lives</div>
+    <div class="age-sliders">
+      <!-- Primary -->
+      <div class="age-block">
+        <div class="age-header">
+          <div class="age-who">
+            <div class="age-avatar p">👤</div>
+            <div class="age-who-lbl p">Primary Insured</div>
+          </div>
+          <div class="age-val p" id="age1-out">30 yrs</div>
+        </div>
+        <input type="range" class="p" min="25" max="40" value="30" step="1" id="age1" oninput="calc()">
+        <div class="age-range-lbl"><span>25 yrs</span><span>40 yrs</span></div>
+      </div>
+      <!-- Secondary -->
+      <div class="age-block">
+        <div class="age-header">
+          <div class="age-who">
+            <div class="age-avatar s">👤</div>
+            <div class="age-who-lbl s">Secondary Insured</div>
+          </div>
+          <div class="age-val s" id="age2-out">28 yrs</div>
+        </div>
+        <input type="range" class="s" min="25" max="40" value="28" step="1" id="age2" oninput="calc()">
+        <div class="age-range-lbl"><span>25 yrs</span><span>40 yrs</span></div>
+      </div>
+    </div>
+
+    <div class="calc-result">
+      <div>
+        <div class="cr-label">Estimated Monthly Premium</div>
+        <div class="cr-value" id="rp-val">~Rp 3.5M</div>
+        <div class="cr-note">Combined for both insured lives</div>
+      </div>
+      <div class="cr-details">
+        <div>
+          <div class="cr-label">Premium Period</div>
+          <div class="cr-dval" id="rp-term">30 yrs (primary)</div>
+        </div>
+        <div>
+          <div class="cr-label">Retirement Starts</div>
+          <div class="cr-dval">Age 60</div>
+        </div>
+        <div>
+          <div class="cr-label">Sum Assured</div>
+          <div class="cr-dval" id="rp-sa">Rp 800M</div>
+        </div>
+      </div>
+    </div>
+    <div class="medical-note">
+      <span>ℹ️</span>
+      <span>Up to <strong style="color:rgba(255,255,255,0.7);">Rp 800M</strong>: health questionnaire only, no doctor visit. <strong style="color:rgba(255,255,255,0.7);">Rp 1B – Rp 1.5B</strong>: full medical examination required.</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- FAQ -->
+<div class="divider-bg" id="faq">
+<div class="section-wrap narrow">
+  <div class="reveal">
+    <div class="section-pill">❓ Got Questions?</div>
+    <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
+    <p class="section-sub">Everything you need to know about Horizon — answered simply.</p>
+  </div>
+  <div class="faq-list reveal">
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">Who can be insured under one policy?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">Horizon covers two people under a single joint policy. This includes married couples, domestic partners, parent and child, or any two individuals with an insurable interest. Both insured must be between <strong>25–40 years old</strong> at the time of enrolment.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">When do I start receiving retirement income?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">Retirement annuity payments begin automatically at <strong>age 60</strong> (for the primary insured) and continue for <strong>20 years</strong>. You don't need to do anything — it's set up from the start of your policy.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">What happens if one of us passes away during the premium-paying period?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">The benefit depends on when it happens: <br><br>• <strong>Years 1–10:</strong> all premiums paid are returned with 4.5% annual interest.<br>• <strong>Years 11–15:</strong> 50% of the Sum Assured is paid immediately to the survivor or heirs.<br>• <strong>Year 16 onwards:</strong> the full 100% Sum Assured is paid immediately.<br><br>The surviving insured may choose to continue or close the policy.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">What happens to the annuity if one of us passes during retirement?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">If one insured passes during retirement: <strong>50% lump sum</strong> of the Sum Assured is paid, and the annuity continues at <strong>50%</strong> for the surviving partner. If both pass, the 50% annuity continues to <strong>heirs</strong> until the 10-year guarantee period ends.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">Do I need a medical exam to enrol?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">For a Sum Assured of <strong>up to Rp 800 Million</strong>, you only need to fill in a health questionnaire — no clinic visit required. For <strong>Rp 1 Billion or Rp 1.5 Billion</strong>, a full medical examination is required before the policy is issued.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">Can we separate the joint policy later?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">Yes! Horizon includes a <strong>Split Policy Feature</strong>. If a qualifying life event occurs (divorce, change of guardian, or adoption), the joint policy can be split into two independent individual policies — with no new medical exam — within 12 months of the event. A one-time admin fee of <strong>Rp 500,000</strong> applies.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">Are the riders mandatory, or can I choose?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">All riders are <strong>optional add-ons</strong>. You can add any combination of: TPD Rider, Critical Illness Rider (15 diseases), COLA Rider (+3.5%/yr inflation adjustment), Accident Rider (+25% SA), and Premium Waiver. Adding riders increases your monthly premium — our consultants can help you pick what fits your needs and budget.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">What if I want to cancel or surrender the policy early?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">Early surrender is possible. The surrender value grows over time: <strong>0%</strong> in years 1–4, rising to <strong>15%</strong> at year 5, <strong>35%</strong> by year 7, <strong>50%</strong> by year 9, and <strong>55–60%</strong> at year 10 and beyond. We always recommend speaking with a consultant before surrendering, as staying invested delivers significantly more long-term value.</div></div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">
+        <div class="faq-q-text">How is the premium amount determined?</div>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a"><div class="faq-a-inner">Your premium depends on three factors: the <strong>entry ages</strong> of both insured lives, the <strong>Sum Assured</strong> you choose, and any <strong>riders</strong> you add. Generally, the younger you enrol, the lower your premium. Use our Premium Estimator above for indicative figures, then book a free consultation for a personalised illustration.</div></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner reveal">
+    <div class="cta-pill">🌟 Ready to Begin?</div>
+    <h2>Secure Your Family's<br><em>Future Today</em></h2>
+    <p>Speak with a Horizon consultant and receive a personalised policy illustration tailored to your family — completely free, no pressure.</p>
+    <div class="cta-btns">
+      <button class="btn-gold" style="height:52px;font-size:14.5px;" onclick="window.open('https://wa.me/6208XXXXXXXXXX','_blank')">💬 WhatsApp Us →</button>
+      <button class="btn-outline-white" style="height:52px;" onclick="sTo('#premium')">Estimate My Premium</button>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">📞</div>
+      <div>
+        <div class="contact-label">Call Our Consultant</div>
+        <div class="contact-num">08XXXX-XXXXX</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:18px;">100% free · Mon–Sat 09:00–18:00 WIB</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:11px;">
+    <div class="brand-emblem" style="width:32px;height:32px;border-radius:8px;font-size:14px;">H</div>
+    <div>
+      <div style="font-family:var(--serif);font-size:14px;font-weight:700;color:var(--white);">Horizon</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);">Multi-Generation Protection</div>
+    </div>
+  </div>
+  <span class="f-copy">© 2025 Horizon Insurance · Multi-Life Joint Annuity Product</span>
+  <div class="f-right">
+    <a href="#product">Product</a>
+    <a href="#benefits">Benefits</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+/* ── Premium Table ── */
+const tbl={
+  800: {25:2.8,30:3.4,35:4.3,40:5.9},
+  1000:{25:3.5,30:4.2,35:5.4,40:7.4},
+  1500:{25:5.2,30:6.3,35:8.1,40:11.1}
+};
+let sa=800;
+function lerp(age,saKey){
+  const t=tbl[saKey],keys=[25,30,35,40];
+  if(t[age])return t[age];
+  for(let i=0;i<keys.length-1;i++){
+    if(age>keys[i]&&age<keys[i+1]){
+      const r=(age-keys[i])/(keys[i+1]-keys[i]);
+      return t[keys[i]]+r*(t[keys[i+1]]-t[keys[i]]);
+    }
+  }
+  return t[25];
+}
+function fmtP(v){return '~Rp '+v.toFixed(1)+'M';}
+function fmtSA(s){return s===800?'Rp 800M':s===1000?'Rp 1 Billion':'Rp 1.5 Billion';}
+
+function calc(){
+  const a1=parseInt(document.getElementById('age1').value);
+  const a2=parseInt(document.getElementById('age2').value);
+  document.getElementById('age1-out').textContent=a1+' yrs';
+  document.getElementById('age2-out').textContent=a2+' yrs';
+  // Combined premium: weighted by older age (higher risk drives base, secondary adds ~30%)
+  const p1=lerp(a1,sa);
+  const p2=lerp(a2,sa)*0.30;
+  const total=p1+p2;
+  document.getElementById('rp-val').textContent=fmtP(total);
+  document.getElementById('rp-term').textContent=(60-Math.min(a1,a2))+' yrs (younger)';
+  document.getElementById('rp-sa').textContent=fmtSA(sa);
+}
+function selSA(el,v){
+  document.querySelectorAll('.sa-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');sa=v;calc();
+}
+
+/* ── Tab toggle ── */
+function sTab(id,el){
+  document.querySelectorAll('.btab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bpanel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('b-'+id).classList.add('active');
+}
+
+/* ── FAQ toggle ── */
+function toggleFaq(item){
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+/* ── Nav ── */
+function sTo(sel){document.querySelector(sel).scrollIntoView({behavior:'smooth'});}
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open');}
+
+/* ── Reveal on scroll ── */
+const obs=new IntersectionObserver(e=>e.forEach(x=>{
+  if(x.isIntersecting)x.target.classList.add('in');
+}),{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+calc();
+</script>
+</body>
+</html>
